@@ -1,25 +1,35 @@
-const http = require("http")
+var express = require("express")
 
-const handleAllRequest = (req,res) =>{
-    const url = req.url
-    res.setHeader("content-type","text/html")
-    if (url === "/"){
-        res.write("<h1>Hello Node js</h1>")                     
-    }
-    else if (url === "/login"){
-        res.write("<h2>Welcome to Login page</h2>")                     
-    }
-    else if (url == "/signup"){
-        res.write("<h3>Sign up for more offerss</h3>")                     
-    }
-   else {
-        res.write("<h1>Page not found</h1>")                     
-    }
-    res.end()
-}
+const app = express()
+const userRoutes = require("./Routes/user.js")
 
-const server = http.createServer(handleAllRequest)
+// middlewares
 
-server.listen(5000, ()=>{
-    console.log("server started")
+app.use((req, res, next)=>{
+    console.log("middleware being executed");
+    next()
+})
+// routes
+app.get("/", (req,res) =>{
+    res.send("Hi there, Welcome to Sally's kitchen & More")
+})
+app.get("/contact",(req, res)=>{
+    res.send("Contact us")
+})
+
+app.post("/create", (req,res) =>{
+    res.send("Create new Post")
+})
+app.put("/update", (req,res) =>{
+    console.log("updating post")
+    res.send("Update Post")
+})
+app.delete("/delete", (req,res) =>{
+    console.log("Deleting post")
+    res.send("Delete Post")
+})
+app.use("/",userRoutes)
+
+app.listen(5001,()=>{
+    console.log("localhost is being executed");
 })
